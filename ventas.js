@@ -1,42 +1,42 @@
-const VENTAS_BASE=5;
-function calcularComision(numeroVentas,PrecioProducto){
-    let comision=0;
-    if (numeroVentas > VENTAS_BASE){
-        let ventaExtra= numeroVentas-VENTAS_BASE;
-        comision = ventaExtra * (PrecioProducto*0.1);
+const VENTAS_BASE = 5;
+
+function calcularComision(numeroVentas, precioProducto) {
+    let comision = 0;
+    // Si las ventas superan la base, se paga 10% sobre el precio por cada venta extra
+    if (numeroVentas > VENTAS_BASE) {
+        let ventaExtra = numeroVentas - VENTAS_BASE;
+        comision = ventaExtra * (precioProducto * 0.1);
     }
     return comision;
 }
-function calcular(){
- // recuperamos propiedades de la caja de texto
-    let componenteSueldoBase =  document.getElementById("txtSueldoBase");
-    let componenteVentas =  document.getElementById("txtVentas");
-    let componentePecio =  document.getElementById("txtPrecio");
-// recuperamos el valor de las cajas de texto
-    let SueldoBaseStr = componenteSueldoBase.value;
-    let SueldoVentasStr = componenteVentas.value;
-    let PrecioPtoductoStr = componentePecio.value;
-    // convertimos el texto en numeros
-    let SueldoBase = parseFloat(SueldoBaseStr);
-    let numeroVentas = parseFloat(SueldoVentasStr);
-    let PrecioProducto = parseFloat(PrecioPtoductoStr);
-    let comision=calcularComision(numeroVentas,PrecioProducto);
 
-    let total = SueldoBase + comision;
+function calcular() {
+    // 1. Recuperar valores usando la función de utilitarios.js
+    let sueldoBaseStr = recuperarTexto("txtSueldoBase");
+    let numeroVentasStr = recuperarTexto("txtVentas");
+    let precioProductoStr = recuperarTexto("txtPrecio");
 
-    let spSueldoBase= document.getElementById("spSueldoBase");
-    let spComision= document.getElementById("spComision");
-    let spTotal= document.getElementById("spTotal");
+    // 2. Validaciones básicas
+    if (sueldoBaseStr === "" || numeroVentasStr === "" || precioProductoStr === "") {
+        alert("Por favor, completa todos los campos.");
+        return;
+    }
 
-    spSueldoBase.textContent=SueldoBase;
-    spComision.textContent=comision;
-    spTotal.textContent=total;
+    let sueldoBase = parseFloat(sueldoBaseStr);
+    let numeroVentas = parseFloat(numeroVentasStr);
+    let precioProducto = parseFloat(precioProductoStr);
 
+    if (sueldoBase < 0 || numeroVentas < 0 || precioProducto < 0) {
+        alert("Los valores no pueden ser negativos.");
+        return;
+    }
 
+    // 3. Lógica de cálculo
+    let comision = calcularComision(numeroVentas, precioProducto);
+    let total = sueldoBase + comision;
 
-
-
-
-
-
+    // 4. Mostrar resultados en el HTML con formato de moneda
+    document.getElementById("spSueldoBase").textContent = `$${sueldoBase.toFixed(2)}`;
+    document.getElementById("spComision").textContent = `$${comision.toFixed(2)}`;
+    document.getElementById("spTotal").textContent = `$${total.toFixed(2)}`;
 }
